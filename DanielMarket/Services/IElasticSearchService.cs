@@ -1,7 +1,10 @@
-﻿namespace DanielMarket.Services
+﻿using Nest;
+
+namespace DanielMarket.Services
 {
-    public interface IElasticSearchService<T>
+    public interface IElasticSearchService<T> where T : class
     {
+        string GetRequestBody(ISearchResponse<T> response);
         Task<IEnumerable<T>> GetAllDocumentsAsync(string indexName);
         Task<IEnumerable<T>> GetDocumentsByTermAsync(string indexName, string fieldName, string fieldValue);
         Task<IEnumerable<T>> GetDocumentsByTermsAsync(string indexName, string fieldName, List<string> fieldValue);

@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 var settings = new ConnectionSettings(new Uri(Environment.GetEnvironmentVariable("ELASTICSEARCH_URI")))
     .DefaultIndex("products")
     .BasicAuthentication(Environment.GetEnvironmentVariable("ELASTICSEARCH_USERNAME"), Environment.GetEnvironmentVariable("ELASTICSEARCH_PASSWORD"))
-    .EnableApiVersioningHeader()
+    .EnableApiVersioningHeader().DisableDirectStreaming(true)
     .ServerCertificateValidationCallback((o, certificate, chain, errors) => true);
 
 

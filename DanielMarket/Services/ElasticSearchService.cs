@@ -2,6 +2,9 @@
 using DanielMarket.Models;
 using Elasticsearch.Net;
 using Nest;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Xml.Linq;
 
 namespace DanielMarket.Services
@@ -49,6 +52,14 @@ namespace DanielMarket.Services
             .Terms(fieldValue))));
 
             return response.Documents;
+        }
+
+        public string GetRequestBody(ISearchResponse<T> response)
+        {
+            var debugInfo = response.DebugInformation;
+            var requestBodyStartIndex = debugInfo.IndexOf("# Request:");
+            var requestBodyEndIndex = debugInfo.IndexOf("# Response:");
+            return debugInfo.Substring(requestBodyStartIndex, requestBodyEndIndex - requestBodyStartIndex).Trim();
         }
     }
 }
