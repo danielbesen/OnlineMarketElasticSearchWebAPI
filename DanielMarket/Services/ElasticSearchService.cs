@@ -5,6 +5,7 @@ using Nest;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace DanielMarket.Services
@@ -25,7 +26,8 @@ namespace DanielMarket.Services
                             .Query(q => q.MatchAll())
                             .Size(1000));
 
-            return response.Documents;
+            var documentsWithIds = GetDocumentsIds(response);
+            return documentsWithIds;
         }
  
         public async Task<IEnumerable<T>> GetDocumentsByTermAsync(string indexName, string fieldName, string fieldValue)
@@ -37,8 +39,8 @@ namespace DanielMarket.Services
             .Term(t => t
             .Field(fieldName).Value(fieldValue.ToLower()).CaseInsensitive(true))));
 
-
-            return response.Documents;
+            var documentsWithIds = GetDocumentsIds(response);
+            return documentsWithIds;
         }
 
         public async Task<IEnumerable<T>> GetDocumentsByTermsAsync(string indexName, string fieldName, List<string> fieldValue)
@@ -51,7 +53,8 @@ namespace DanielMarket.Services
             .Field(fieldName)
             .Terms(fieldValue))));
 
-            return response.Documents;
+            var documentsWithIds = GetDocumentsIds(response);
+            return documentsWithIds;
         }
 
         public string GetRequestBody(ISearchResponse<T> response)
@@ -60,6 +63,19 @@ namespace DanielMarket.Services
             var requestBodyStartIndex = debugInfo.IndexOf("# Request:");
             var requestBodyEndIndex = debugInfo.IndexOf("# Response:");
             return debugInfo.Substring(requestBodyStartIndex, requestBodyEndIndex - requestBodyStartIndex).Trim();
+        }
+        public IEnumerable<T> GetDocumentsIds(ISearchResponse<T> response)
+        {
+            var documentsWithIds = response.Hits.Select(h =>
+            {
+                var sourceType = h.Source.GetType();
+                var idProperty = sourceType.GetProperty("Id");
+                if (idProperty != null)
+                    idProperty.SetValue(h.Source, h.Id);
+                return h.Source;
+            });
+
+            return documentsWithIds;
         }
     }
 }

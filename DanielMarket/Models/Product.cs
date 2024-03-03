@@ -5,8 +5,8 @@ namespace DanielMarket.Models
     [ElasticsearchType(RelationName = "products")]
     public class Product
     {
-        [Keyword(Name = "_id")]
-        public int Id { get; set; }
+        [Keyword(Name ="_id")]
+        public string Id { get; set; }
 
         [Text(Name = "name")]
         public string Name { get; set; }
