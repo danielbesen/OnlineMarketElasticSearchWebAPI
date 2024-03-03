@@ -37,5 +37,18 @@ namespace DanielMarket.Services
 
             return response.Documents;
         }
+
+        public async Task<IEnumerable<T>> GetDocumentsByTermsAsync(string indexName, string fieldName, List<string> fieldValue)
+        {
+            var response = await _elasticClient.SearchAsync<T>(s => s
+            .Index(indexName)
+            .Size(1000)
+            .Query(q => q
+            .Terms(t => t
+            .Field(fieldName)
+            .Terms(fieldValue))));
+
+            return response.Documents;
+        }
     }
 }
