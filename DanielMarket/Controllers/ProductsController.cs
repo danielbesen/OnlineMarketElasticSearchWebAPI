@@ -3,6 +3,7 @@ using DanielMarket.Models.Utils;
 using DanielMarket.Services;
 using Microsoft.AspNetCore.Mvc;
 using Nest;
+using Swashbuckle.AspNetCore.Annotations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,6 +22,7 @@ namespace DanielMarket.Controllers
 
         [HttpGet]
         [Route("GetAllDocuments")]
+        [SwaggerOperation(Summary = "Retrive all documents")]
         public async Task<ActionResult> GetAllDocuments()
         {
             var documents = await _elasticSearchService.GetAllDocumentsAsync("products");
@@ -32,6 +34,7 @@ namespace DanielMarket.Controllers
 
         [HttpGet]
         [Route("GetDocumentsByField/{fieldName}/{fieldValue}")]
+        [SwaggerOperation(Summary = "Retrive documents by exact match field")]
         public async Task<ActionResult> GetDocumentsByField(string fieldName, string fieldValue)
         {
             var documents = await _elasticSearchService.GetDocumentsByTermAsync("products", fieldName, fieldValue);
@@ -43,6 +46,7 @@ namespace DanielMarket.Controllers
 
         [HttpPost]
         [Route("GetDocumentsByTerms/{fieldName}")]
+        [SwaggerOperation(Summary = "Retrive documents by exact match fields (operator OR)")]
         public async Task<ActionResult> GetDocumentsByTerms(string fieldName, [FromBody] List<string> fieldValue)
         {
             var documents = await _elasticSearchService.GetDocumentsByTermsAsync("products", fieldName, fieldValue);
@@ -50,6 +54,21 @@ namespace DanielMarket.Controllers
             if (response.Results == null || response.TotalCount == 0) { 
                 return NotFound();}
             return Ok(response);           
+        }
+
+        
+        [HttpPost]
+        [Route("GetDocumentsByIds")]
+        [SwaggerOperation(Summary = "Retrive documents by their IDs")]
+        public async Task<ActionResult> GetDocumentsByIds( [FromBody] List<string> fieldValue)
+        {
+            var documents = await _elasticSearchService.GetDocumentsByIdsAsync("products", fieldValue);
+            ResponseResult<Product> response = new ResponseResult<Product>(documents);
+            if (response.Results == null || response.TotalCount == 0)
+            {
+                return NotFound();
+            }
+            return Ok(response);
         }
     }
 }

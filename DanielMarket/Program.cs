@@ -1,5 +1,6 @@
 using DanielMarket.Models;
 using DanielMarket.Services;
+using Microsoft.OpenApi.Models;
 using Nest;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +21,11 @@ builder.Services.AddScoped<IElasticSearchService<Product>, ElasticSearchService<
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.EnableAnnotations();
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Elastic Search API", Version = "v1" });
+});
 
 var app = builder.Build();
 

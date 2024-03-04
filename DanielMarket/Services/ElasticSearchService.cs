@@ -19,44 +19,6 @@ namespace DanielMarket.Services
             this._elasticClient = elasticClient;
         }
 
-        public async Task<IEnumerable<T>> GetAllDocumentsAsync(string indexName)
-        {
-            var response = await _elasticClient.SearchAsync<T>(s => s
-                            .Index(indexName)
-                            .Query(q => q.MatchAll())
-                            .Size(1000));
-
-            var documentsWithIds = GetDocumentsIds(response);
-            return documentsWithIds;
-        }
- 
-        public async Task<IEnumerable<T>> GetDocumentsByTermAsync(string indexName, string fieldName, string fieldValue)
-        {
-            var response = await _elasticClient.SearchAsync<T>(s => s
-            .Index(indexName)
-            .Size(1000)
-            .Query(q => q
-            .Term(t => t
-            .Field(fieldName).Value(fieldValue.ToLower()).CaseInsensitive(true))));
-
-            var documentsWithIds = GetDocumentsIds(response);
-            return documentsWithIds;
-        }
-
-        public async Task<IEnumerable<T>> GetDocumentsByTermsAsync(string indexName, string fieldName, List<string> fieldValue)
-        {
-            var response = await _elasticClient.SearchAsync<T>(s => s
-            .Index(indexName)
-            .Size(1000)
-            .Query(q => q
-            .Terms(t => t
-            .Field(fieldName)
-            .Terms(fieldValue))));
-
-            var documentsWithIds = GetDocumentsIds(response);
-            return documentsWithIds;
-        }
-
         public string GetRequestBody(ISearchResponse<T> response)
         {
             var debugInfo = response.DebugInformation;
@@ -75,6 +37,53 @@ namespace DanielMarket.Services
                 return h.Source;
             });
 
+            return documentsWithIds;
+        }
+        public async Task<IEnumerable<T>> GetAllDocumentsAsync(string indexName)
+        {
+            var response = await _elasticClient.SearchAsync<T>(s => s
+                            .Index(indexName)
+                            .Query(q => q.MatchAll())
+                            .Size(1000));
+
+            var documentsWithIds = GetDocumentsIds(response);
+            return documentsWithIds;
+        }
+        public async Task<IEnumerable<T>> GetDocumentsByTermAsync(string indexName, string fieldName, string fieldValue)
+        {
+            var response = await _elasticClient.SearchAsync<T>(s => s
+            .Index(indexName)
+            .Size(1000)
+            .Query(q => q
+            .Term(t => t
+            .Field(fieldName).Value(fieldValue.ToLower()).CaseInsensitive(true))));
+
+            var documentsWithIds = GetDocumentsIds(response);
+            return documentsWithIds;
+        }
+        public async Task<IEnumerable<T>> GetDocumentsByTermsAsync(string indexName, string fieldName, List<string> fieldValue)
+        {
+            var response = await _elasticClient.SearchAsync<T>(s => s
+            .Index(indexName)
+            .Size(1000)
+            .Query(q => q
+            .Terms(t => t
+            .Field(fieldName)
+            .Terms(fieldValue))));
+
+            var documentsWithIds = GetDocumentsIds(response);
+            return documentsWithIds;
+        }
+        public async Task<IEnumerable<T>> GetDocumentsByIdsAsync(string indexName, List<string> fieldValue)
+        {
+            var response = await _elasticClient.SearchAsync<T>(s => s
+            .Index(indexName)
+            .Size(1000)
+            .Query(q => q
+            .Ids(i => i
+            .Values(fieldValue))));
+
+            var documentsWithIds = GetDocumentsIds(response);
             return documentsWithIds;
         }
     }

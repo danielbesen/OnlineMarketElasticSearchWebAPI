@@ -9,6 +9,7 @@ namespace DanielMarket.Services
         Task<IEnumerable<T>> GetAllDocumentsAsync(string indexName);
         Task<IEnumerable<T>> GetDocumentsByTermAsync(string indexName, string fieldName, string fieldValue);
         Task<IEnumerable<T>> GetDocumentsByTermsAsync(string indexName, string fieldName, List<string> fieldValue);
+        Task<IEnumerable<T>> GetDocumentsByIdsAsync(string indexName, List<string> fieldValue);
         
     }
 }
