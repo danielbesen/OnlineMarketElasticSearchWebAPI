@@ -81,7 +81,9 @@ namespace DanielMarket.Services
             .Size(1000)
             .Query(q => q
             .Ids(i => i
-            .Values(fieldValue))));
+            .Values(fieldValue)))
+            .Sort(ss => ss
+            .Descending("_score")));
 
             var documentsWithIds = GetDocumentsIds(response);
             return documentsWithIds;
