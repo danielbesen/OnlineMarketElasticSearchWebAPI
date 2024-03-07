@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Reflection;
+using System.Text;
 using System.Xml.Linq;
 
 namespace DanielMarket.Services
@@ -21,10 +22,13 @@ namespace DanielMarket.Services
 
         public string GetRequestBody(ISearchResponse<T> response)
         {
-            var debugInfo = response.DebugInformation;
-            var requestBodyStartIndex = debugInfo.IndexOf("# Request:");
-            var requestBodyEndIndex = debugInfo.IndexOf("# Response:");
-            return debugInfo.Substring(requestBodyStartIndex, requestBodyEndIndex - requestBodyStartIndex).Trim();
+            //var debugInfo = response.DebugInformation;
+            //var requestBodyStartIndex = debugInfo.IndexOf("# Request:");
+            //var requestBodyEndIndex = debugInfo.IndexOf("# Response:");
+            //return debugInfo.Substring(requestBodyStartIndex, requestBodyEndIndex - requestBodyStartIndex).Trim();
+
+            string requestJson = Encoding.UTF8.GetString(response.ApiCall.RequestBodyInBytes);
+            return requestJson;
         }
         public IEnumerable<T> GetDocumentsIds(ISearchResponse<T> response)
         {
@@ -87,6 +91,22 @@ namespace DanielMarket.Services
 
             var documentsWithIds = GetDocumentsIds(response);
             return documentsWithIds;
+        }
+        public async Task<IEnumerable<T>> GetDocumentsGreaterThan(string indexName, string fieldName, string fieldValue)
+        {
+            var response = await _elasticClient.SearchAsync<T>(s => s
+            .Index(indexName)
+            .Size(1000)
+            .Query(q => q
+            .Range(r => r
+            .Field(fieldName)
+            .GreaterThan(Convert.ToInt32(fieldValue)))));
+            
+            var test = GetRequestBody(response);
+
+            var documentsWithIds = GetDocumentsIds(response);
+            return documentsWithIds;
+            
         }
     }
 }

@@ -70,5 +70,17 @@ namespace DanielMarket.Controllers
             }
             return Ok(response);
         }
+
+        [HttpGet]
+        [Route("GetDocumentsGreaterThan/{fieldName}/{fieldValue}")]
+        [SwaggerOperation(Summary = "Retrive documents with fieldName greater than fieldValue")]
+        public async Task<ActionResult> GetDocumentsGreaterThan(string fieldName, string fieldValue)
+        {
+            var documents = await _elasticSearchService.GetDocumentsGreaterThan("products", fieldName, fieldValue);
+            ResponseResult<Product> response = new ResponseResult<Product>(documents);
+            if (response.Results == null || response.TotalCount == 0)
+                return NotFound();
+            return Ok(response);
+        }
     }
 }
