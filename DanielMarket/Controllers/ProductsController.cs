@@ -25,11 +25,18 @@ namespace DanielMarket.Controllers
         [SwaggerOperation(Summary = "Retrive all documents")]
         public async Task<ActionResult> GetAllDocuments()
         {
-            var documents = await _elasticSearchService.GetAllDocumentsAsync("products");
-            ResponseResult<Product> response = new ResponseResult<Product>(documents);
-            if (response.Results == null || response.TotalCount == 0)
-                return NotFound();
-            return Ok(response);
+            try
+            {
+                var documents = await _elasticSearchService.GetAllDocumentsAsync("products");
+                ResponseResult<Product> response = new ResponseResult<Product>(documents);
+                if (response.Results == null || response.TotalCount == 0)
+                    return NotFound();
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
         }
 
         [HttpGet]
@@ -37,11 +44,18 @@ namespace DanielMarket.Controllers
         [SwaggerOperation(Summary = "Retrive documents by exact match field")]
         public async Task<ActionResult> GetDocumentsByField(string fieldName, string fieldValue)
         {
-            var documents = await _elasticSearchService.GetDocumentsByTermAsync("products", fieldName, fieldValue);
-            ResponseResult<Product> response = new ResponseResult<Product>(documents);
-            if (response.Results == null || response.TotalCount == 0)
-                return NotFound();
-            return Ok(response);
+            try
+            {
+                var documents = await _elasticSearchService.GetDocumentsByTermAsync("products", fieldName, fieldValue);
+                ResponseResult<Product> response = new ResponseResult<Product>(documents);
+                if (response.Results == null || response.TotalCount == 0)
+                    return NotFound();
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
         }
 
         [HttpPost]
@@ -49,26 +63,41 @@ namespace DanielMarket.Controllers
         [SwaggerOperation(Summary = "Retrive documents by exact match fields (operator OR)")]
         public async Task<ActionResult> GetDocumentsByTerms(string fieldName, [FromBody] List<string> fieldValue)
         {
-            var documents = await _elasticSearchService.GetDocumentsByTermsAsync("products", fieldName, fieldValue);
-            ResponseResult<Product> response = new ResponseResult<Product>(documents);
-            if (response.Results == null || response.TotalCount == 0) { 
-                return NotFound();}
-            return Ok(response);           
+            try
+            {
+                var documents = await _elasticSearchService.GetDocumentsByTermsAsync("products", fieldName, fieldValue);
+                ResponseResult<Product> response = new ResponseResult<Product>(documents);
+                if (response.Results == null || response.TotalCount == 0)
+                {
+                    return NotFound();
+                }
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
         }
 
-        
         [HttpPost]
         [Route("GetDocumentsByIds")]
         [SwaggerOperation(Summary = "Retrive documents by their IDs")]
         public async Task<ActionResult> GetDocumentsByIds( [FromBody] List<string> fieldValue)
         {
-            var documents = await _elasticSearchService.GetDocumentsByIdsAsync("products", fieldValue);
-            ResponseResult<Product> response = new ResponseResult<Product>(documents);
-            if (response.Results == null || response.TotalCount == 0)
+            try
             {
-                return NotFound();
+                var documents = await _elasticSearchService.GetDocumentsByIdsAsync("products", fieldValue);
+                ResponseResult<Product> response = new ResponseResult<Product>(documents);
+                if (response.Results == null || response.TotalCount == 0)
+                {
+                    return NotFound();
+                }
+                return Ok(response);
             }
-            return Ok(response);
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
         }
 
         [HttpGet]
@@ -76,11 +105,37 @@ namespace DanielMarket.Controllers
         [SwaggerOperation(Summary = "Retrive documents with fieldName greater than fieldValue")]
         public async Task<ActionResult> GetDocumentsGreaterThan(string fieldName, string fieldValue)
         {
-            var documents = await _elasticSearchService.GetDocumentsGreaterThan("products", fieldName, fieldValue);
-            ResponseResult<Product> response = new ResponseResult<Product>(documents);
-            if (response.Results == null || response.TotalCount == 0)
-                return NotFound();
-            return Ok(response);
+            try
+            {
+                var documents = await _elasticSearchService.GetDocumentsGreaterThan("products", fieldName, fieldValue);
+                ResponseResult<Product> response = new ResponseResult<Product>(documents);
+                if (response.Results == null || response.TotalCount == 0)
+                    return NotFound();
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetDocumentsByPrefix/{fieldName}/{fieldValue}")]
+        [SwaggerOperation(Summary = "Retrive documents by prefix")]
+        public async Task<IActionResult> GetDocumentsByPrefix(string fieldName, string fieldValue)
+        {
+            try
+            {
+                var documents = await _elasticSearchService.GetDocumentsByPrefix("products", fieldName, fieldValue);
+                ResponseResult<Product> response = new ResponseResult<Product>(documents);
+                if (response == null || response.TotalCount == 0)
+                    return NotFound(response);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
         }
     }
 }
