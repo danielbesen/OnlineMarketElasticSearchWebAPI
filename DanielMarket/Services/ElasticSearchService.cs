@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Xml.Linq;
 
@@ -162,9 +163,9 @@ namespace DanielMarket.Services
                 var response = await _elasticClient.SearchAsync<T>(s => s
                 .Index(indexName)
                 .Size(1000)
-                .Query(q => q));
-
-                var test = GetRequestBody(response);
+                .Query(q => q
+                .Prefix(p => p
+                .Field(fieldName).Value(fieldValue))));
 
                 var DocumentsWithIds = GetDocumentsIds(response);
 
