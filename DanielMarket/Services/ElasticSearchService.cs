@@ -177,5 +177,18 @@ namespace DanielMarket.Services
             }
 
         }
+        public async Task<IEnumerable<T>> GetDocumentsWithNotNullField(string indexName, string fieldName)
+        {
+            var response = await _elasticClient.SearchAsync<T>(s => s
+            .Index(indexName)
+            .Size(1000)
+            .Query(q => q
+            .Exists(e => e
+            .Field(fieldName))));
+
+            var documentsWithIds = GetDocumentsIds(response);
+            return documentsWithIds;
+            
+        }
     }
 }

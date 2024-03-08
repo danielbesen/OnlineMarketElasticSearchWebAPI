@@ -137,5 +137,25 @@ namespace DanielMarket.Controllers
                 throw new Exception($"Error: {e}");
             }
         }
+
+        [HttpGet]
+        [Route("GetDocumentsWithNotNullField/{fieldName}")]
+        [SwaggerOperation(Summary = "Retrive documents with not null field")]
+        public async Task<IActionResult> GetDocumentsWithNotNullField(string fieldName)
+        {
+            try
+            {
+                var documents = await _elasticSearchService.GetDocumentsWithNotNullField("products", fieldName);
+                ResponseResult<Product> response = new ResponseResult<Product>(documents);
+                if (response == null || response.TotalCount == 0)
+                    return NotFound(response);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+        }
+        
     }
 }
