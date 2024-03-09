@@ -13,5 +13,6 @@ namespace DanielMarket.Services
         Task<IEnumerable<T>> GetDocumentsGreaterThan(string indexName, string fieldName, string fieldValue);
         Task<IEnumerable<T>> GetDocumentsByPrefix(string indexName, string fieldName, string fieldValue);
         Task<IEnumerable<T>> GetDocumentsWithNotNullField(string indexName, string fieldName);
+        Task<IEnumerable<T>> GetDocumentsWithNullField(string indexName, string fieldName);
     }
 }

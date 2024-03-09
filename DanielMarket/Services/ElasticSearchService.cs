@@ -179,16 +179,45 @@ namespace DanielMarket.Services
         }
         public async Task<IEnumerable<T>> GetDocumentsWithNotNullField(string indexName, string fieldName)
         {
-            var response = await _elasticClient.SearchAsync<T>(s => s
-            .Index(indexName)
-            .Size(1000)
-            .Query(q => q
-            .Exists(e => e
-            .Field(fieldName))));
+            try
+            {
+                var response = await _elasticClient.SearchAsync<T>(s => s
+                .Index(indexName)
+                .Size(1000)
+                .Query(q => q
+                .Exists(e => e
+                .Field(fieldName))));
 
-            var documentsWithIds = GetDocumentsIds(response);
-            return documentsWithIds;
-            
+                var documentsWithIds = GetDocumentsIds(response);
+                return documentsWithIds;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+        }
+        public async Task<IEnumerable<T>> GetDocumentsWithNullField(string indexName, string fieldName)
+        {
+            try
+            {
+                var response = await _elasticClient.SearchAsync<T>(s => s
+                .Index(indexName)
+                .Size(1000)
+                .Query(q => q
+                .Bool(b => b
+                .MustNot(mn => mn
+                .Exists(e => e
+                .Field(fieldName))))));
+
+                var test = GetRequestBody(response);
+
+                var documentsWithIds = GetDocumentsIds(response);
+                return documentsWithIds;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
         }
     }
 }
