@@ -233,5 +233,23 @@ namespace DanielMarket.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetDocumentsBooleanLogicExample")]
+        [SwaggerOperation(Summary = "Retrive documents using a boolean logic (just a test)")]
+        public async Task<IActionResult> GetDocumentsBooleanLogicExample()
+        {
+            try
+            {
+                var documents = await _elasticSearchService.GetDocumentsBooleanLogicExampleAsync("products");
+                ResponseResult<Product> response = new ResponseResult<Product>(documents);
+                if (response == null || response.TotalCount == 0)
+                    return NotFound(response);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+        }
     }
 }

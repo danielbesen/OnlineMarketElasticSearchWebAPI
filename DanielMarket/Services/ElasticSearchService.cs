@@ -238,29 +238,103 @@ namespace DanielMarket.Services
         }
         public async Task<IEnumerable<T>> GetDocumentsMultiFieldFullTextQueryAsync(string indexName, string fieldName, string[] fieldValue)
         {
-            var response = await _elasticClient.SearchAsync<T>(s => s
-            .Index(indexName)
-            .Size(1000)
-            .Query(q => q
-            .MultiMatch(mm => mm
-            .Query(fieldName).Fields(fieldValue))));
+            try
+            {
+                var response = await _elasticClient.SearchAsync<T>(s => s
+                .Index(indexName)
+                .Size(1000)
+                .Query(q => q
+                .MultiMatch(mm => mm
+                .Query(fieldName).Fields(fieldValue))));
 
-            var test = GetRequestBody(response);
+                var test = GetRequestBody(response);
 
-            var documentsWithIds = GetDocumentsIds(response);
-            return documentsWithIds;
+                var documentsWithIds = GetDocumentsIds(response);
+                return documentsWithIds;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+
         }
         public async Task<IEnumerable<T>> GetDocumentsByPhraseAsync(string indexName, string fieldName, string fieldValue)
         {
-            var response = await _elasticClient.SearchAsync<T>(s => s
-            .Index(indexName)
-            .Size(1000)
-            .Query(q => q
-            .MatchPhrase(mp => mp
-            .Field(fieldName).Query(fieldValue))));
+            try
+            {
+                var response = await _elasticClient.SearchAsync<T>(s => s
+                .Index(indexName)
+                .Size(1000)
+                .Query(q => q
+                .MatchPhrase(mp => mp
+                .Field(fieldName).Query(fieldValue))));
 
-            var documentsWithIds = GetDocumentsIds(response);
-            return documentsWithIds;
+                var documentsWithIds = GetDocumentsIds(response);
+                return documentsWithIds;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+        }
+        public async Task<IEnumerable<T>> GetDocumentsBooleanLogicExampleAsync(string indexName)
+        {
+            try
+            {
+                //var response = await _elasticClient.SearchAsync<T>(s => s
+                //.Index(indexName)
+                //.Size(1000)
+                //.Query(q => q
+                //.Bool(b => b
+                //.Must(m => m
+                //.Term(t => t
+                //.Field("tags.keyword").Value("Alcohol")))
+                //.MustNot(mn => mn
+                //.Term(tt => tt
+                //.Field("tags.keyword").Value("Wine")))
+                //.Should(sh => sh
+                //.Term(te => te
+                //.Field("tags.keyword").Value("Beer")))
+                //.Should(sh => sh
+                //.Match(ma => ma
+                //.Field("name").Query("beer")))
+                //.Should(sh => sh
+                //.Match(ma => ma
+                //.Field("description").Query("beer")))
+                //.MinimumShouldMatch(1))));
+
+
+                var response = await _elasticClient.SearchAsync<T>(s => s
+                .Index(indexName)
+                .Size(1000)
+                .Query(q => q
+                .Bool(b => b
+                .Must(m => m
+                .Term(t => t
+                .Field("tags.keyword").Value("Alcohol")))
+                .MustNot(mn => mn
+                .Term(tt => tt
+                .Field("tags.keyword").Value("Wine")))
+                .Should(sh => sh
+                .Term(te => te
+                .Field("tags.keyword").Value("Beer")),
+                sh => sh
+                .Match(ma => ma
+                .Field("name").Query("beer")),
+                sh => sh
+                .Match(ma => ma
+                .Field("description").Query("beer")))
+                .MinimumShouldMatch(1))));
+
+                var queryBody = GetRequestBody(response);
+
+                var documentsWithIds = GetDocumentsIds(response);
+                return documentsWithIds;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
         }
     }
 }

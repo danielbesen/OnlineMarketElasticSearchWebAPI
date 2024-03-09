@@ -17,5 +17,6 @@ namespace DanielMarket.Services
         Task<IEnumerable<T>> GetDocumentsFullTextQueryAsync(string indexName, string fieldName, string fieldValue);
         Task<IEnumerable<T>> GetDocumentsMultiFieldFullTextQueryAsync(string indexName, string fieldName, string[] fieldValue);
         Task<IEnumerable<T>> GetDocumentsByPhraseAsync(string indexName, string fieldName, string fieldValue);
+        Task<IEnumerable<T>> GetDocumentsBooleanLogicExampleAsync(string indexName);
     }
 }
