@@ -250,10 +250,17 @@ namespace DanielMarket.Services
             var documentsWithIds = GetDocumentsIds(response);
             return documentsWithIds;
         }
-        public Task<IEnumerable<T>> GetDocumentsByPhraseAsync(string indexName, string fieldName, string fieldValue)
+        public async Task<IEnumerable<T>> GetDocumentsByPhraseAsync(string indexName, string fieldName, string fieldValue)
         {
-            var response = _elasticClient.SearchAsync<T>(s => s
-            .Index(IndexName))
+            var response = await _elasticClient.SearchAsync<T>(s => s
+            .Index(indexName)
+            .Size(1000)
+            .Query(q => q
+            .MatchPhrase(mp => mp
+            .Field(fieldName).Query(fieldValue))));
+
+            var documentsWithIds = GetDocumentsIds(response);
+            return documentsWithIds;
         }
     }
 }
