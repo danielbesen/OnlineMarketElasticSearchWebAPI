@@ -175,5 +175,24 @@ namespace DanielMarket.Controllers
                 throw new Exception($"Error: {e}");
             }
         }
+
+        [HttpGet]
+        [Route("GetDocumentsFullTextQuery/{fieldName}/{fieldValue}")]
+        [SwaggerOperation(Summary = "Retrive documents perfoming a full text query")]
+        public async Task<IActionResult> GetDocumentsFullTextQuery(string fieldName, string fieldValue)
+        {
+            try
+            {
+                var documents = await _elasticSearchService.GetDocumentsFullTextQuery("products", fieldName, fieldValue);
+                ResponseResult<Product> response = new ResponseResult<Product>(documents);
+                if (response == null || response.TotalCount == 0)
+                    return NotFound(response);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+        }
     }
 }

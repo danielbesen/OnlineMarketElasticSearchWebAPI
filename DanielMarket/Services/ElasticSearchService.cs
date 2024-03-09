@@ -209,7 +209,26 @@ namespace DanielMarket.Services
                 .Exists(e => e
                 .Field(fieldName))))));
 
-                var test = GetRequestBody(response);
+                var documentsWithIds = GetDocumentsIds(response);
+                return documentsWithIds;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+        }
+        public async Task<IEnumerable<T>> GetDocumentsFullTextQuery(string indexName, string fieldName, string fieldValue)
+        {
+            try
+            {
+                var response = await _elasticClient.SearchAsync<T>(s => s
+                .Index(indexName)
+                .Size(1000)
+                .Query(q => q
+                .Match(m => m
+                .Field(fieldName)
+                .Query(fieldValue)
+                .Operator(Operator.Or))));
 
                 var documentsWithIds = GetDocumentsIds(response);
                 return documentsWithIds;
