@@ -132,7 +132,7 @@ namespace DanielMarket.Services
                 throw new Exception($"Error: {e}");
             }
         }
-        public async Task<IEnumerable<T>> GetDocumentsGreaterThan(string indexName, string fieldName, string fieldValue)
+        public async Task<IEnumerable<T>> GetDocumentsGreaterThanAsync(string indexName, string fieldName, string fieldValue)
         {
             try
             {
@@ -154,7 +154,7 @@ namespace DanielMarket.Services
 
 
         }
-        public async Task<IEnumerable<T>> GetDocumentsByPrefix(string indexName, string fieldName, string fieldValue)
+        public async Task<IEnumerable<T>> GetDocumentsByPrefixAsync(string indexName, string fieldName, string fieldValue)
         {
             try
             {
@@ -175,7 +175,7 @@ namespace DanielMarket.Services
             }
 
         }
-        public async Task<IEnumerable<T>> GetDocumentsWithNotNullField(string indexName, string fieldName)
+        public async Task<IEnumerable<T>> GetDocumentsWithNotNullFieldAsync(string indexName, string fieldName)
         {
             try
             {
@@ -194,7 +194,7 @@ namespace DanielMarket.Services
                 throw new Exception($"Error: {e}");
             }
         }
-        public async Task<IEnumerable<T>> GetDocumentsWithNullField(string indexName, string fieldName)
+        public async Task<IEnumerable<T>> GetDocumentsWithNullFieldAsync(string indexName, string fieldName)
         {
             try
             {
@@ -215,7 +215,7 @@ namespace DanielMarket.Services
                 throw new Exception($"Error: {e}");
             }
         }
-        public async Task<IEnumerable<T>> GetDocumentsFullTextQuery(string indexName, string fieldName, string fieldValue)
+        public async Task<IEnumerable<T>> GetDocumentsFullTextQueryAsync(string indexName, string fieldName, string fieldValue)
         {
             try
             {
@@ -236,7 +236,7 @@ namespace DanielMarket.Services
                 throw new Exception($"Error: {e}");
             }
         }
-        public async Task<IEnumerable<T>> GetDocumentsMultiFieldFullTextQuery(string indexName, string fieldName, string[] fieldValue)
+        public async Task<IEnumerable<T>> GetDocumentsMultiFieldFullTextQueryAsync(string indexName, string fieldName, string[] fieldValue)
         {
             var response = await _elasticClient.SearchAsync<T>(s => s
             .Index(indexName)
@@ -249,6 +249,11 @@ namespace DanielMarket.Services
 
             var documentsWithIds = GetDocumentsIds(response);
             return documentsWithIds;
+        }
+        public Task<IEnumerable<T>> GetDocumentsByPhraseAsync(string indexName, string fieldName, string fieldValue)
+        {
+            var response = _elasticClient.SearchAsync<T>(s => s
+            .Index(IndexName))
         }
     }
 }

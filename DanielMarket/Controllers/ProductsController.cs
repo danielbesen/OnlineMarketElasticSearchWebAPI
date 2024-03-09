@@ -107,7 +107,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsGreaterThan("products", fieldName, fieldValue);
+                var documents = await _elasticSearchService.GetDocumentsGreaterThanAsync("products", fieldName, fieldValue);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response.Results == null || response.TotalCount == 0)
                     return NotFound();
@@ -126,7 +126,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsByPrefix("products", fieldName, fieldValue);
+                var documents = await _elasticSearchService.GetDocumentsByPrefixAsync("products", fieldName, fieldValue);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response == null || response.TotalCount == 0)
                     return NotFound(response);
@@ -145,7 +145,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsWithNotNullField("products", fieldName);
+                var documents = await _elasticSearchService.GetDocumentsWithNotNullFieldAsync("products", fieldName);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response == null || response.TotalCount == 0)
                     return NotFound(response);
@@ -164,7 +164,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsWithNullField("products", fieldName);
+                var documents = await _elasticSearchService.GetDocumentsWithNullFieldAsync("products", fieldName);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response == null || response.TotalCount == 0)
                     return NotFound(response);
@@ -183,7 +183,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsFullTextQuery("products", fieldName, fieldValue);
+                var documents = await _elasticSearchService.GetDocumentsFullTextQueryAsync("products", fieldName, fieldValue);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response == null || response.TotalCount == 0)
                     return NotFound(response);
@@ -202,7 +202,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsMultiFieldFullTextQuery("products", fieldName, fieldValue);
+                var documents = await _elasticSearchService.GetDocumentsMultiFieldFullTextQueryAsync("products", fieldName, fieldValue);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response == null || response.TotalCount == 0)
                     return NotFound(response);
@@ -213,6 +213,25 @@ namespace DanielMarket.Controllers
                 throw new Exception($"Error: {e}");
             }
         }
-        
+
+        [HttpGet]
+        [Route("GetDocumentsByPhrase/{fieldName}/{fieldValue}")]
+        [SwaggerOperation(Summary = "Retrive documents by phrase")]
+        public async Task<IActionResult> GetDocumentsByPhrase(string fieldName, string fieldValue)
+        {
+            try
+            {
+                var documents = await _elasticSearchService.GetDocumentsByPhraseAsync("products", fieldName, fieldValue);
+                ResponseResult<Product> response = new ResponseResult<Product>(documents);
+                if (response == null || response.TotalCount == 0)
+                    return NotFound(response);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+        }
+
     }
 }

@@ -10,11 +10,12 @@ namespace DanielMarket.Services
         Task<IEnumerable<T>> GetDocumentsByTermAsync(string indexName, string fieldName, string fieldValue);
         Task<IEnumerable<T>> GetDocumentsByTermsAsync(string indexName, string fieldName, List<string> fieldValue);
         Task<IEnumerable<T>> GetDocumentsByIdsAsync(string indexName, List<string> fieldValue);
-        Task<IEnumerable<T>> GetDocumentsGreaterThan(string indexName, string fieldName, string fieldValue);
-        Task<IEnumerable<T>> GetDocumentsByPrefix(string indexName, string fieldName, string fieldValue);
-        Task<IEnumerable<T>> GetDocumentsWithNotNullField(string indexName, string fieldName);
-        Task<IEnumerable<T>> GetDocumentsWithNullField(string indexName, string fieldName);
-        Task<IEnumerable<T>> GetDocumentsFullTextQuery(string indexName, string fieldName, string fieldValue);
-        Task<IEnumerable<T>> GetDocumentsMultiFieldFullTextQuery(string indexName, string fieldName, string[] fieldValue);
+        Task<IEnumerable<T>> GetDocumentsGreaterThanAsync(string indexName, string fieldName, string fieldValue);
+        Task<IEnumerable<T>> GetDocumentsByPrefixAsync(string indexName, string fieldName, string fieldValue);
+        Task<IEnumerable<T>> GetDocumentsWithNotNullFieldAsync(string indexName, string fieldName);
+        Task<IEnumerable<T>> GetDocumentsWithNullFieldAsync(string indexName, string fieldName);
+        Task<IEnumerable<T>> GetDocumentsFullTextQueryAsync(string indexName, string fieldName, string fieldValue);
+        Task<IEnumerable<T>> GetDocumentsMultiFieldFullTextQueryAsync(string indexName, string fieldName, string[] fieldValue);
+        Task<IEnumerable<T>> GetDocumentsByPhraseAsync(string indexName, string fieldName, string fieldValue);
     }
 }
