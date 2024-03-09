@@ -281,29 +281,6 @@ namespace DanielMarket.Services
         {
             try
             {
-                //var response = await _elasticClient.SearchAsync<T>(s => s
-                //.Index(indexName)
-                //.Size(1000)
-                //.Query(q => q
-                //.Bool(b => b
-                //.Must(m => m
-                //.Term(t => t
-                //.Field("tags.keyword").Value("Alcohol")))
-                //.MustNot(mn => mn
-                //.Term(tt => tt
-                //.Field("tags.keyword").Value("Wine")))
-                //.Should(sh => sh
-                //.Term(te => te
-                //.Field("tags.keyword").Value("Beer")))
-                //.Should(sh => sh
-                //.Match(ma => ma
-                //.Field("name").Query("beer")))
-                //.Should(sh => sh
-                //.Match(ma => ma
-                //.Field("description").Query("beer")))
-                //.MinimumShouldMatch(1))));
-
-
                 var response = await _elasticClient.SearchAsync<T>(s => s
                 .Index(indexName)
                 .Size(1000)
