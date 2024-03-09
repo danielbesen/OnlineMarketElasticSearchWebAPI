@@ -144,8 +144,6 @@ namespace DanielMarket.Services
                 .Field(fieldName)
                 .GreaterThan(Convert.ToInt32(fieldValue)))));
 
-                var test = GetRequestBody(response);
-
                 var documentsWithIds = GetDocumentsIds(response);
                 return documentsWithIds;
             }
@@ -237,6 +235,20 @@ namespace DanielMarket.Services
             {
                 throw new Exception($"Error: {e}");
             }
+        }
+        public async Task<IEnumerable<T>> GetDocumentsMultiFieldFullTextQuery(string indexName, string fieldName, string[] fieldValue)
+        {
+            var response = await _elasticClient.SearchAsync<T>(s => s
+            .Index(indexName)
+            .Size(1000)
+            .Query(q => q
+            .MultiMatch(mm => mm
+            .Query(fieldName).Fields(fieldValue))));
+
+            var test = GetRequestBody(response);
+
+            var documentsWithIds = GetDocumentsIds(response);
+            return documentsWithIds;
         }
     }
 }
