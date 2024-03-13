@@ -1,4 +1,5 @@
-﻿using Nest;
+﻿using DanielMarket.Models;
+using Nest;
 
 namespace DanielMarket.Services
 {
@@ -18,6 +19,6 @@ namespace DanielMarket.Services
         Task<IEnumerable<T>> GetDocumentsMultiFieldFullTextQueryAsync(string indexName, string fieldName, string[] fieldValue);
         Task<IEnumerable<T>> GetDocumentsByPhraseAsync(string indexName, string fieldName, string fieldValue);
         Task<IEnumerable<T>> GetDocumentsBooleanLogicExampleAsync(string indexName);
-        Task<IEnumerable<T>> GetStatsExplicity(string indexName, string fieldName);
+        Task<OrderStats> GetStatsExplicity(string indexName, string fieldName);
     }
 }
