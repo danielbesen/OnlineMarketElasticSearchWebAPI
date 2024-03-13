@@ -313,5 +313,20 @@ namespace DanielMarket.Services
                 throw new Exception($"Error: {e}");
             }
         }
+        public async Task<IEnumerable<T>> GetStatsExplicity(string indexName, string fieldName)
+        {
+            var response = await _elasticClient.SearchAsync<T>(s => s
+            .Index(indexName)
+            .Size(0)
+            .Aggregations(aggs => aggs
+            .Sum("total_sales", sum => sum.Field(fieldName))
+            .Average("avg_sale", avg => avg.Field(fieldName))
+            .Min("min_sale", min => min.Field(fieldName))
+            .Max("max_sale", max => max.Field(fieldName))));
+
+            var test = GetRequestBody(response);
+
+            return null;
+        }
     }
 }
