@@ -313,7 +313,7 @@ namespace DanielMarket.Services
                 throw new Exception($"Error: {e}");
             }
         }
-        public async Task<OrderStats> GetStatsExplicity(string indexName, string fieldName)
+        public async Task<Stats> GetStatsExplicity(string indexName, string fieldName)
         {
             try
             {
@@ -326,7 +326,7 @@ namespace DanielMarket.Services
                 .Min("min_sale", min => min.Field(fieldName))
                 .Max("max_sale", max => max.Field(fieldName))));
 
-                OrderStats orderStats = new OrderStats()
+                Stats orderStats = new Stats()
                 {
                     TotalSalesValue = response.Aggregations.Sum("total_sales").Value,
                     AverageSalePrice = response.Aggregations.Average("avg_sale").Value,

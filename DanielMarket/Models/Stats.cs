@@ -1,6 +1,6 @@
 ﻿namespace DanielMarket.Models
 {
-    public class OrderStats
+    public class Stats
     {
         public double? TotalSalesValue { get; set; }
         public double? AverageSalePrice { get; set; }
