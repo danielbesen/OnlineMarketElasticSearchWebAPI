@@ -375,10 +375,10 @@ namespace DanielMarket.Services
 
                 AggsValues orderStats = new AggsValues()
                 {
-                    TotalSalesValue = response.Aggregations.Sum("total_sales").Value,
-                    AverageSalePrice = response.Aggregations.Average("avg_sale").Value,
-                    MinimumSalePrice = response.Aggregations.Min("min_sale").Value,
-                    MaximumSalePrice = response.Aggregations.Max("max_sale").Value
+                    TotalSalesValue = response.Aggregations.Stats("sales_stats").Sum,
+                    AverageSalePrice = response.Aggregations.Stats("sales_stats").Average,
+                    MinimumSalePrice = response.Aggregations.Stats("sales_stats").Min,
+                    MaximumSalePrice = response.Aggregations.Stats("sales_stats").Max
                 };
 
                 return orderStats;
