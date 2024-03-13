@@ -313,7 +313,7 @@ namespace DanielMarket.Services
                 throw new Exception($"Error: {e}");
             }
         }
-        public async Task<Stats> GetStatsExplicity(string indexName, string fieldName)
+        public async Task<AggsValues> GetStatsExplicityAsync(string indexName, string fieldName)
         {
             try
             {
@@ -326,7 +326,7 @@ namespace DanielMarket.Services
                 .Min("min_sale", min => min.Field(fieldName))
                 .Max("max_sale", max => max.Field(fieldName))));
 
-                Stats orderStats = new Stats()
+                AggsValues orderStats = new AggsValues()
                 {
                     TotalSalesValue = response.Aggregations.Sum("total_sales").Value,
                     AverageSalePrice = response.Aggregations.Average("avg_sale").Value,
@@ -339,6 +339,28 @@ namespace DanielMarket.Services
             catch (Exception e)
             {
                 throw new Exception($"Error : {e}");
+            }
+        }
+        public async Task<AggsValues> GetHowManyDifferentValuesAsync(string indexName, string fieldName)
+        {
+            try
+            {
+                var query = await _elasticClient.SearchAsync<T>(s => s
+                .Index(indexName)
+                .Size(0)
+                .Aggregations(aggs => aggs
+                .Cardinality("total_salesman", c => c.Field(fieldName))));
+
+                AggsValues aggsValues = new AggsValues()
+                {
+                    Amount = query.Aggregations.Cardinality("total_salesman").Value
+                };
+
+                return aggsValues;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
             }
         }
     }

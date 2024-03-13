@@ -23,10 +23,27 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var stats = await _elasticSearchService.GetStatsExplicity("orders", fieldName);
-                if (stats == null)
-                    return NotFound(stats);
-                return Ok(stats);
+                var aggsValues = await _elasticSearchService.GetStatsExplicityAsync("orders", fieldName);
+                if (aggsValues == null)
+                    return NotFound(aggsValues);
+                return Ok(aggsValues);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error : {e}");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetHowManyDifferentValues/{fieldName}")]
+        public async Task<ActionResult> GetHowManyDifferentValues(string fieldName)
+        {
+            try
+            {
+                var aggsValues = await _elasticSearchService.GetHowManyDifferentValuesAsync("orders", fieldName);
+                if (aggsValues == null)
+                    return NotFound(aggsValues);
+                return Ok(aggsValues);
             }
             catch (Exception e)
             {
