@@ -18,7 +18,7 @@ namespace DanielMarket.Models
         public string PurchasedAt { get; set; }
 
         [Number(NumberType.Double, Name = "total_amount")]
-        public double TotalAmount { get; set; }
+        public double TotalPrice { get; set; }
 
         [Nested]
         [PropertyName("salesman")]
@@ -27,6 +27,5 @@ namespace DanielMarket.Models
         [Nested]
         [PropertyName("lines")]
         public IEnumerable<Line> Lines { get; set; }
-
     }
 }
