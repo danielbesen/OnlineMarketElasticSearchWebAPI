@@ -21,5 +21,6 @@ namespace DanielMarket.Services
         Task<IEnumerable<T>> GetDocumentsBooleanLogicExampleAsync(string indexName);
         Task<AggsValues> GetStatsExplicityAsync(string indexName, string fieldName);
         Task<AggsValues> GetHowManyDifferentValuesAsync(string indexName, string fieldName);
+        Task<AggsValues> GetStatsImplicitAsync(string indexName, string fieldName);
     }
 }

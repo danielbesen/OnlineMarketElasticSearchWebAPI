@@ -363,5 +363,30 @@ namespace DanielMarket.Services
                 throw new Exception($"Error: {e}");
             }
         }
+        public async Task<AggsValues> GetStatsImplicitAsync(string indexName, string fieldName)
+        {
+            try
+            {
+                var response = await _elasticClient.SearchAsync<T>(s => s
+                .Index(indexName)
+                .Size(0)
+                .Aggregations(aggs => aggs
+                .Stats("sales_stats", st => st.Field(fieldName))));
+
+                AggsValues orderStats = new AggsValues()
+                {
+                    TotalSalesValue = response.Aggregations.Sum("total_sales").Value,
+                    AverageSalePrice = response.Aggregations.Average("avg_sale").Value,
+                    MinimumSalePrice = response.Aggregations.Min("min_sale").Value,
+                    MaximumSalePrice = response.Aggregations.Max("max_sale").Value
+                };
+
+                return orderStats;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error : {e}");
+            }
+        }
     }
 }

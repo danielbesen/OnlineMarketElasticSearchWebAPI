@@ -10,6 +10,7 @@ namespace DanielMarket.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
+        private string indexName = "orders";
         private readonly IElasticSearchService<Order> _elasticSearchService;
 
         public OrdersController(IElasticSearchService<Order> elasticSearchService)
@@ -23,7 +24,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var aggsValues = await _elasticSearchService.GetStatsExplicityAsync("orders", fieldName);
+                var aggsValues = await _elasticSearchService.GetStatsExplicityAsync(indexName, fieldName);
                 if (aggsValues == null)
                     return NotFound(aggsValues);
                 return Ok(aggsValues);
@@ -40,7 +41,24 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var aggsValues = await _elasticSearchService.GetHowManyDifferentValuesAsync("orders", fieldName);
+                var aggsValues = await _elasticSearchService.GetHowManyDifferentValuesAsync(indexName, fieldName);
+                if (aggsValues == null)
+                    return NotFound(aggsValues);
+                return Ok(aggsValues);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error : {e}");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetStatsImplicit/{fieldName}")]
+        public async Task<ActionResult> GetStatsImplicit(string fieldName)
+        {
+            try
+            {
+                var aggsValues = await _elasticSearchService.GetStatsImplicitAsync(indexName, fieldName);
                 if (aggsValues == null)
                     return NotFound(aggsValues);
                 return Ok(aggsValues);

@@ -13,6 +13,7 @@ namespace DanielMarket.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
+        private string indexName = "products";
         private readonly Services.IElasticSearchService<Product> _elasticSearchService;
 
         public ProductsController(IElasticSearchService<Product> elasticSearchService)
@@ -27,7 +28,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetAllDocumentsAsync("products");
+                var documents = await _elasticSearchService.GetAllDocumentsAsync(indexName);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response.Results == null || response.TotalCount == 0)
                     return NotFound();
@@ -46,7 +47,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsByTermAsync("products", fieldName, fieldValue);
+                var documents = await _elasticSearchService.GetDocumentsByTermAsync(indexName, fieldName, fieldValue);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response.Results == null || response.TotalCount == 0)
                     return NotFound();
@@ -65,7 +66,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsByTermsAsync("products", fieldName, fieldValue);
+                var documents = await _elasticSearchService.GetDocumentsByTermsAsync(indexName, fieldName, fieldValue);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response.Results == null || response.TotalCount == 0)
                 {
@@ -86,7 +87,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsByIdsAsync("products", fieldValue);
+                var documents = await _elasticSearchService.GetDocumentsByIdsAsync(indexName, fieldValue);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response.Results == null || response.TotalCount == 0)
                 {
@@ -107,7 +108,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsGreaterThanAsync("products", fieldName, fieldValue);
+                var documents = await _elasticSearchService.GetDocumentsGreaterThanAsync(indexName, fieldName, fieldValue);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response.Results == null || response.TotalCount == 0)
                     return NotFound();
@@ -126,7 +127,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsByPrefixAsync("products", fieldName, fieldValue);
+                var documents = await _elasticSearchService.GetDocumentsByPrefixAsync(indexName, fieldName, fieldValue);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response == null || response.TotalCount == 0)
                     return NotFound(response);
@@ -145,7 +146,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsWithNotNullFieldAsync("products", fieldName);
+                var documents = await _elasticSearchService.GetDocumentsWithNotNullFieldAsync(indexName, fieldName);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response == null || response.TotalCount == 0)
                     return NotFound(response);
@@ -164,7 +165,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsWithNullFieldAsync("products", fieldName);
+                var documents = await _elasticSearchService.GetDocumentsWithNullFieldAsync(indexName, fieldName);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response == null || response.TotalCount == 0)
                     return NotFound(response);
@@ -183,7 +184,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsFullTextQueryAsync("products", fieldName, fieldValue);
+                var documents = await _elasticSearchService.GetDocumentsFullTextQueryAsync(indexName, fieldName, fieldValue);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response == null || response.TotalCount == 0)
                     return NotFound(response);
@@ -202,7 +203,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsMultiFieldFullTextQueryAsync("products", fieldName, fieldValue);
+                var documents = await _elasticSearchService.GetDocumentsMultiFieldFullTextQueryAsync(indexName, fieldName, fieldValue);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response == null || response.TotalCount == 0)
                     return NotFound(response);
@@ -221,7 +222,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsByPhraseAsync("products", fieldName, fieldValue);
+                var documents = await _elasticSearchService.GetDocumentsByPhraseAsync(indexName, fieldName, fieldValue);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response == null || response.TotalCount == 0)
                     return NotFound(response);
@@ -240,7 +241,7 @@ namespace DanielMarket.Controllers
         {
             try
             {
-                var documents = await _elasticSearchService.GetDocumentsBooleanLogicExampleAsync("products");
+                var documents = await _elasticSearchService.GetDocumentsBooleanLogicExampleAsync(indexName);
                 ResponseResult<Product> response = new ResponseResult<Product>(documents);
                 if (response == null || response.TotalCount == 0)
                     return NotFound(response);
