@@ -68,5 +68,23 @@ namespace DanielMarket.Controllers
                 throw new Exception($"Error : {e}");
             }
         }
+
+        [HttpGet]
+        [Route("GetDocsCountByDiferentStatus/{fieldName}")]
+        public async Task<ActionResult> GetDocsCountByDiferentStatus(string fieldName)
+        {
+            try
+            {
+                var aggsValues = await _elasticSearchService.GetDocsCountByDiferentStatusAsync(indexName, fieldName);
+                if (aggsValues == null || aggsValues.Count == 0)
+                    return NotFound(aggsValues);
+                return Ok(aggsValues);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error : {e}");
+            }
+        }
+        
     }
 }

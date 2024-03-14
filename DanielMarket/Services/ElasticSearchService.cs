@@ -388,5 +388,33 @@ namespace DanielMarket.Services
                 throw new Exception($"Error : {e}");
             }
         }
+        public async Task<Dictionary<string, long>> GetDocsCountByDiferentStatusAsync(string indexName, string fieldName)
+        {
+            try
+            {
+                Dictionary<string, long> status = new Dictionary<string, long>();
+
+                var query = await _elasticClient.SearchAsync<T>(s => s
+                .Index(indexName)
+                .Size(0)
+                .Aggregations(aggs => aggs
+                .Terms("status_terms", t => t.Field(fieldName)
+                                                  .Missing("N/A")
+                                                  .MinimumDocumentCount(0)
+                                                  .Order(o => o.Ascending("_key")))));
+
+                var buckets = query.Aggregations.Terms("status_terms").Buckets;
+                foreach (var bucket in buckets)
+                {
+                    status.Add(bucket.Key, (long)bucket.DocCount);
+                }
+
+                return status;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+        }
     }
 }
