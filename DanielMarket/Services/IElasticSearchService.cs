@@ -23,5 +23,6 @@ namespace DanielMarket.Services
         Task<AggsValues> GetHowManyDifferentValuesAsync(string indexName, string fieldName);
         Task<AggsValues> GetStatsImplicitAsync(string indexName, string fieldName);
         Task<Dictionary<string, long>> GetDocsCountByDiferentStatusAsync(string indexName, string fieldName);
+        Task<Dictionary<string, long>> AggregationByRangeAsync(string indexName, string fieldName);
     }
 }

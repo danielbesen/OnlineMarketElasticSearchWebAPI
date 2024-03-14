@@ -392,7 +392,7 @@ namespace DanielMarket.Services
         {
             try
             {
-                Dictionary<string, long> status = new Dictionary<string, long>();
+                Dictionary<string, long> kvp = new Dictionary<string, long>();
 
                 var query = await _elasticClient.SearchAsync<T>(s => s
                 .Index(indexName)
@@ -406,10 +406,37 @@ namespace DanielMarket.Services
                 var buckets = query.Aggregations.Terms("status_terms").Buckets;
                 foreach (var bucket in buckets)
                 {
-                    status.Add(bucket.Key, (long)bucket.DocCount);
+                    kvp.Add(bucket.Key, (long)bucket.DocCount);
                 }
 
-                return status;
+                return kvp;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+        }
+        public async Task<Dictionary<string, long>> AggregationByRangeAsync(string indexName, string fieldName)
+        {
+            try
+            {
+                Dictionary<string, long> kvp = new Dictionary<string, long>();
+
+                var query = await _elasticClient.SearchAsync<T>(s => s
+                .Index(indexName)
+                .Size(0)
+                .Aggregations(aggs => aggs
+                .Range("amount_distribution", r => r
+                .Field(fieldName)
+                .Ranges(r => r.To(50), r => r.From(50).To(100), r => r.From(100)))));
+
+                var buckets = query.Aggregations.Range("amount_distribution").Buckets;
+                foreach (var bucket in buckets)
+                {
+                    kvp.Add(bucket.Key, bucket.DocCount);
+                }
+
+                return kvp;
             }
             catch (Exception e)
             {
