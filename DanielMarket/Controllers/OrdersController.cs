@@ -3,6 +3,7 @@ using DanielMarket.Models.Utils;
 using DanielMarket.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace DanielMarket.Controllers
 {
@@ -16,6 +17,25 @@ namespace DanielMarket.Controllers
         public OrdersController(IElasticSearchService<Order> elasticSearchService)
         {
             this._elasticSearchService = elasticSearchService;
+        }
+
+        [HttpGet]
+        [Route("GetAllDocuments")]
+        [SwaggerOperation(Summary = "Retrive all documents")]
+        public async Task<ActionResult> GetAllDocuments()
+        {
+            try
+            {
+                var documents = await _elasticSearchService.GetAllDocumentsAsync(indexName);
+                ResponseResult<Order> response = new ResponseResult<Order>(documents);
+                if (response.Results == null || response.TotalCount == 0)
+                    return NotFound();
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
         }
 
         [HttpGet]

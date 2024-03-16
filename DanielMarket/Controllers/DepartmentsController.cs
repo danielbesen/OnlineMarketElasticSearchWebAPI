@@ -1,8 +1,10 @@
 ﻿using DanielMarket.Models;
+using DanielMarket.Models.Utils;
 using DanielMarket.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nest;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace DanielMarket.Controllers
 {

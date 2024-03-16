@@ -20,7 +20,6 @@ namespace DanielMarket.Models
         [Number(NumberType.Double, Name = "total_amount")]
         public double TotalPrice { get; set; }
 
-        [Nested]
         [PropertyName("salesman")]
         public Salesman Salesman { get; set; }
 
