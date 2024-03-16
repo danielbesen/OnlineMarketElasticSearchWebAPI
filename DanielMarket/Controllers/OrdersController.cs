@@ -102,6 +102,5 @@ namespace DanielMarket.Controllers
                 throw new Exception($"Error : {e}");
             }
         }
-        
     }
 }

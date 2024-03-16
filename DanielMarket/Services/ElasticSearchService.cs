@@ -443,5 +443,32 @@ namespace DanielMarket.Services
                 throw new Exception($"Error: {e}");
             }
         }
+        public async Task<Dictionary<string, double>> GetNestedAggregationAsync(string indexName, string pathName, string fieldName)
+        {
+            try
+            {
+                Dictionary<string, double> kvp = new Dictionary<string, double>();
+
+                var query = await _elasticClient.SearchAsync<T>(s => s
+                .Index(indexName)
+                .Size(0)
+                .Aggregations(aggs => aggs
+                .Nested("age_employees", n => n.Path(pathName)
+                .Aggregations(agg => agg
+                .Min("minimum_age", m => m.Field(fieldName))))));
+
+                var doc_count = query.Aggregations.Nested("age_employees").DocCount;
+                var value = query.Aggregations.Nested("age_employees").Min("minimum_age").Value;
+
+                kvp.Add("doc_count", doc_count);
+                kvp.Add("minimum_age", (double)value);
+
+                return kvp;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+        }
     }
 }
