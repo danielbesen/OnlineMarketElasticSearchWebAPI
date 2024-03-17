@@ -252,5 +252,24 @@ namespace DanielMarket.Controllers
                 throw new Exception($"Error: {e}");
             }
         }
+
+        [HttpGet]
+        [Route("GetDocumentsHandlingTypoErrors/{fieldName}/{fieldValue}")]
+        [SwaggerOperation(Summary = "Retrive documents by phrase match fieldValue with error")]
+        public async Task<ActionResult> GetDocumentsHandlingTypoErrors(string fieldName, string fieldValue)
+        {
+            try
+            {
+                var documents = await _elasticSearchService.GetDocumentsHandlingTypoErrorsAsync(indexName, fieldName, fieldValue);
+                ResponseResult<Product> response = new ResponseResult<Product>(documents);
+                if (response.Results == null || response.TotalCount == 0)
+                    return NotFound();
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+        }
     }
 }

@@ -470,5 +470,25 @@ namespace DanielMarket.Services
                 throw new Exception($"Error: {e}");
             }
         }
+
+        public async Task<IEnumerable<T>> GetDocumentsHandlingTypoErrorsAsync(string indexName, string fieldName, string fieldValue)
+        {
+            try
+            {
+                var query = await _elasticClient.SearchAsync<T>(s => s
+                .Index(indexName)
+                .Size(1000)
+                .Query(q => q
+                .Match(m => m
+                .Field(fieldName).Query(fieldValue).Fuzziness(Fuzziness.Auto))));
+
+                var documentsWithIds = GetDocumentsIds(query);
+                return documentsWithIds;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error: {e}");
+            }
+        }
     }
 }
